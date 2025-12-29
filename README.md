@@ -108,8 +108,7 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 4. **Try it out:**
 
 - "Analyze the vercel/next.js repository"
-- "Show me charts for the facebook/react repository"
-- "Take a screenshot of github.com/microsoft/playwright and analyze it"
+- "Take a screenshot of github.com/microsoft/playwright and show me pull requests information"
 
 ## How It Works
 
