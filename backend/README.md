@@ -22,8 +22,6 @@ GITHUB_MCP_COMMAND=npx
 GITHUB_MCP_ARGS=@modelcontextprotocol/server-github
 PLAYWRIGHT_MCP_COMMAND=docker
 PLAYWRIGHT_MCP_ARGS=run,-i,--rm,--pull=always,mcr.microsoft.com/playwright/mcp
-PLOTS_MCP_COMMAND=python
-PLOTS_MCP_ARGS=-m,mcp_plots
 ```
 
 3. **Run the backend:**
@@ -51,14 +49,12 @@ The backend will be available at `http://localhost:8000`
 - `main.py` - FastAPI application and routes
 - `mcp_client.py` - MCP server client management
 - `openai_client.py` - OpenAI integration with function calling
-- `data_processors.py` - Data conversion utilities (GitHub data to CSV)
 
 ## MCP Server Integration
 
 The backend manages connections to three MCP servers:
 1. **GitHub MCP** - Fetches repository data
 2. **Playwright MCP** - Takes screenshots
-3. **mcp-plots** - Generates charts
 
 All MCP servers communicate via stdio (standard input/output) transport.
 
