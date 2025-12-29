@@ -1,0 +1,10 @@
+# Core dependencies - versions compatible with mcp package
+# Note: mcp requires starlette>=0.39, so we need FastAPI 0.116.0+
+# Install in order: mcp first, then FastAPI
+mcp
+fastapi>=0.116.0
+uvicorn[standard]
+python-dotenv
+openai
+pydantic
+

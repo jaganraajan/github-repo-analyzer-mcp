@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repo Analyzer - Backend Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #fafbfc;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2563eb;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 50px;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            margin: 80px 0 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        .section-title {
+            background: #fafbfc;
+            display: inline-block;
+            padding: 0 30px;
+            position: relative;
+            color: #2563eb;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Architecture Flow */
+        .architecture-flow {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 60px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .stage {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .stage-header {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stage-title {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .stage-title-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .stage-title-text {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .stage-title-desc {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* API Stage */
+        .stage.api {
+            border: 3px solid #60a5fa;
+        }
+
+        .api-item {
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .api-item-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .api-item-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .api-item-desc {
+            font-size: 11px;
+            color: #718096;
+        }
+
+        /* Processing Stage */
+        .stage.processing {
+            border: 3px solid #3b82f6;
+            background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .processing-item {
+            background: white;
+            border: 2px solid #93c5fd;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .processing-item-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .processing-item-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .processing-item-desc {
+            font-size: 10px;
+            color: #718096;
+            line-height: 1.3;
+        }
+
+        /* AI Stage */
+        .stage.ai {
+            border: 3px solid #8b5cf6;
+            background: linear-gradient(180deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ai-item {
+            background: white;
+            border: 2px solid #c4b5fd;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .ai-item-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .ai-item-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .ai-item-desc {
+            font-size: 10px;
+            color: #718096;
+            line-height: 1.3;
+        }
+
+        /* MCP Stage */
+        .stage.mcp {
+            border: 3px solid #10b981;
+            background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .mcp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .mcp-item {
+            background: white;
+            border: 2px solid #86efac;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .mcp-item-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .mcp-item-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .mcp-item-desc {
+            font-size: 10px;
+            color: #718096;
+            line-height: 1.3;
+        }
+
+        /* Output Stage */
+        .stage.output {
+            border: 3px solid #f59e0b;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .output-item {
+            background: #fffbeb;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .output-item-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .output-item-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .output-item-desc {
+            font-size: 10px;
+            color: #718096;
+        }
+
+        /* Arrows */
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 40px;
+            min-width: 40px;
+        }
+
+        .arrow svg {
+            width: 40px;
+            height: 40px;
+            fill: #3b82f6;
+        }
+
+        /* Component Details Section */
+        .details-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 60px;
+        }
+
+        .details-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .details-title {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .details-title-icon {
+            font-size: 32px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .details-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .details-card.primary {
+            border-color: #93c5fd;
+            background: #eff6ff;
+        }
+
+        .details-card.secondary {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .details-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .details-card-icon {
+            font-size: 28px;
+        }
+
+        .details-list {
+            list-style: none;
+        }
+
+        .details-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+
+        .details-list-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .details-list-text {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .benefits-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .benefits-title {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .benefits-title-icon {
+            font-size: 32px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .benefit-item {
+            text-align: center;
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 36px;
+        }
+
+        .benefit-icon.green {
+            background: linear-gradient(135deg, #d4f4dd 0%, #b8ecc7 100%);
+        }
+
+        .benefit-icon.purple {
+            background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+        }
+
+        .benefit-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .benefit-description {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1200px) {
+            .architecture-flow {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GitHub Repository Analyzer</h1>
+        <div class="subtitle">Backend Architecture - FastAPI & MCP Integration</div>
+
+        <!-- Main Architecture Flow -->
+        <div class="section-divider">
+            <div class="section-title">
+                Backend Architecture Flow
+            </div>
+        </div>
+
+        <div class="architecture-flow">
+            <!-- API Stage -->
+            <div class="stage api">
+                <div class="stage-header">API Layer</div>
+                <div class="stage-title">
+                    <div class="stage-title-icon">🌐</div>
+                    <div class="stage-title-text">FastAPI Server</div>
+                    <div class="stage-title-desc">REST API endpoint</div>
+                </div>
+
+                <div class="api-item">
+                    <div class="api-item-icon">📥</div>
+                    <div class="api-item-title">POST /api/chat</div>
+                    <div class="api-item-desc">Receive chat messages</div>
+                </div>
+
+                <div class="api-item">
+                    <div class="api-item-icon">🔄</div>
+                    <div class="api-item-title">SSE Streaming</div>
+                    <div class="api-item-desc">Stream responses in real-time</div>
+                </div>
+
+                <div class="api-item">
+                    <div class="api-item-icon">🔒</div>
+                    <div class="api-item-title">CORS Middleware</div>
+                    <div class="api-item-desc">Allow frontend connections</div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.3 17.275q-.3-.3-.288-.725.013-.425.313-.725L16.15 13H5q-.425 0-.713-.288Q4 12.425 4 12t.287-.713Q4.575 11 5 11h11.15l-2.825-2.825q-.3-.3-.3-.713 0-.412.3-.712t.713-.3q.412 0 .712.3L19.3 11.3q.15.15.213.325.062.175.062.375t-.062.375q-.063.175-.213.325l-4.55 4.55q-.3.3-.725.3-.425 0-.725-.3z"/>
+                </svg>
+            </div>
+
+            <!-- Processing Stage -->
+            <div class="stage processing">
+                <div class="stage-header">Orchestration</div>
+                <div class="stage-title">
+                    <div class="stage-title-icon">⚙️</div>
+                    <div class="stage-title-text">OpenAI Client</div>
+                    <div class="stage-title-desc">Function calling handler</div>
+                </div>
+
+                <div class="processing-item">
+                    <div class="processing-item-icon">🤖</div>
+                    <div class="processing-item-title">Chat Completion</div>
+                    <div class="processing-item-desc">Streaming GPT-4o-mini calls</div>
+                </div>
+
+                <div class="processing-item">
+                    <div class="processing-item-icon">🔧</div>
+                    <div class="processing-item-title">Tool Definitions</div>
+                    <div class="processing-item-desc">fetch_github_repo_data, take_repo_screenshot</div>
+                </div>
+
+                <div class="processing-item">
+                    <div class="processing-item-icon">🔄</div>
+                    <div class="processing-item-title">Tool Execution</div>
+                    <div class="processing-item-desc">Orchestrate MCP tool calls</div>
+                </div>
+
+                <div class="processing-item">
+                    <div class="processing-item-icon">✂️</div>
+                    <div class="processing-item-title">Context Truncation</div>
+                    <div class="processing-item-desc">Manage token limits</div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.3 17.275q-.3-.3-.288-.725.013-.425.313-.725L16.15 13H5q-.425 0-.713-.288Q4 12.425 4 12t.287-.713Q4.575 11 5 11h11.15l-2.825-2.825q-.3-.3-.3-.713 0-.412.3-.712t.713-.3q.412 0 .712.3L19.3 11.3q.15.15.213.325.062.175.062.375t-.062.375q-.063.175-.213.325l-4.55 4.55q-.3.3-.725.3-.425 0-.725-.3z"/>
+                </svg>
+            </div>
+
+            <!-- AI Stage -->
+            <div class="stage ai">
+                <div class="stage-header">AI Processing</div>
+                <div class="stage-title">
+                    <div class="stage-title-icon">🧠</div>
+                    <div class="stage-title-text">OpenAI API</div>
+                    <div class="stage-title-desc">Azure OpenAI or OpenAI</div>
+                </div>
+
+                <div class="ai-grid">
+                    <div class="ai-item">
+                        <div class="ai-item-icon">💬</div>
+                        <div class="ai-item-title">Message Analysis</div>
+                        <div class="ai-item-desc">Understand user intent</div>
+                    </div>
+
+                    <div class="ai-item">
+                        <div class="ai-item-icon">🔧</div>
+                        <div class="ai-item-title">Tool Selection</div>
+                        <div class="ai-item-desc">Choose appropriate tools</div>
+                    </div>
+
+                    <div class="ai-item">
+                        <div class="ai-item-icon">📝</div>
+                        <div class="ai-item-title">Response Generation</div>
+                        <div class="ai-item-desc">Stream text responses</div>
+                    </div>
+
+                    <div class="ai-item">
+                        <div class="ai-item-icon">🔄</div>
+                        <div class="ai-item-title">Multi-Turn</div>
+                        <div class="ai-item-desc">Iterative tool calling</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.3 17.275q-.3-.3-.288-.725.013-.425.313-.725L16.15 13H5q-.425 0-.713-.288Q4 12.425 4 12t.287-.713Q4.575 11 5 11h11.15l-2.825-2.825q-.3-.3-.3-.713 0-.412.3-.712t.713-.3q.412 0 .712.3L19.3 11.3q.15.15.213.325.062.175.062.375t-.062.375q-.063.175-.213.325l-4.55 4.55q-.3.3-.725.3-.425 0-.725-.3z"/>
+                </svg>
+            </div>
+
+            <!-- MCP Stage -->
+            <div class="stage mcp">
+                <div class="stage-header">MCP Integration</div>
+                <div class="stage-title">
+                    <div class="stage-title-icon">🔌</div>
+                    <div class="stage-title-text">MCP Client Manager</div>
+                    <div class="stage-title-desc">Manage MCP server connections</div>
+                </div>
+
+                <div class="mcp-grid">
+                    <div class="mcp-item">
+                        <div class="mcp-item-icon">🐙</div>
+                        <div class="mcp-item-title">GitHub MCP</div>
+                        <div class="mcp-item-desc">Repository data, commits, PRs, issues</div>
+                    </div>
+
+                    <div class="mcp-item">
+                        <div class="mcp-item-icon">🎭</div>
+                        <div class="mcp-item-title">Playwright MCP</div>
+                        <div class="mcp-item-desc">Browser automation & screenshots</div>
+                    </div>
+
+                    <div class="mcp-item">
+                        <div class="mcp-item-icon">🔍</div>
+                        <div class="mcp-item-title">Tool Discovery</div>
+                        <div class="mcp-item-desc">Dynamic tool name resolution</div>
+                    </div>
+
+                    <div class="mcp-item">
+                        <div class="mcp-item-icon">⚡</div>
+                        <div class="mcp-item-title">Parallel Execution</div>
+                        <div class="mcp-item-desc">Async tool calls</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="arrow">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.3 17.275q-.3-.3-.288-.725.013-.425.313-.725L16.15 13H5q-.425 0-.713-.288Q4 12.425 4 12t.287-.713Q4.575 11 5 11h11.15l-2.825-2.825q-.3-.3-.3-.713 0-.412.3-.712t.713-.3q.412 0 .712.3L19.3 11.3q.15.15.213.325.062.175.062.375t-.062.375q-.063.175-.213.325l-4.55 4.55q-.3.3-.725.3-.425 0-.725-.3z"/>
+                </svg>
+            </div>
+
+            <!-- Output Stage -->
+            <div class="stage output">
+                <div class="stage-header">Response Output</div>
+                <div class="stage-title">
+                    <div class="stage-title-icon">📤</div>
+                    <div class="stage-title-text">Stream Results</div>
+                    <div class="stage-title-desc">SSE events to frontend</div>
+                </div>
+
+                <div class="output-grid">
+                    <div class="output-item">
+                        <div class="output-item-icon">💬</div>
+                        <div class="output-item-title">Content Events</div>
+                        <div class="output-item-desc">Streaming text chunks</div>
+                    </div>
+
+                    <div class="output-item">
+                        <div class="output-item-icon">🔧</div>
+                        <div class="output-item-title">Tool Call Events</div>
+                        <div class="output-item-desc">Tool execution notifications</div>
+                    </div>
+
+                    <div class="output-item">
+                        <div class="output-item-icon">✅</div>
+                        <div class="output-item-title">Tool Result Events</div>
+                        <div class="output-item-desc">GitHub data & screenshots</div>
+                    </div>
+
+                    <div class="output-item">
+                        <div class="output-item-icon">🏁</div>
+                        <div class="output-item-title">Completion Events</div>
+                        <div class="output-item-desc">Final state & summary</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Details Section -->
+        <div class="details-section">
+            <div class="details-header">
+                <div class="details-title">
+                    <span class="details-title-icon">🧩</span>
+                    <span>Component Details</span>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="details-card primary">
+                    <div class="details-card-title">
+                        <span class="details-card-icon">⚙️</span>
+                        <span>Core Modules</span>
+                    </div>
+                    <ul class="details-list">
+                        <li>
+                            <span class="details-list-icon">🌐</span>
+                            <span class="details-list-text"><strong>main.py:</strong> FastAPI application with CORS, chat endpoint, and health checks</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🤖</span>
+                            <span class="details-list-text"><strong>openai_client.py:</strong> OpenAI integration with function calling, streaming, and tool execution</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🔌</span>
+                            <span class="details-list-text"><strong>mcp_client.py:</strong> MCP Client Manager for GitHub and Playwright server connections</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🔄</span>
+                            <span class="details-list-text"><strong>Tool Execution:</strong> Async tool calls with error handling and result parsing</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">✂️</span>
+                            <span class="details-list-text"><strong>Context Management:</strong> Message truncation and token limit handling</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="details-card secondary">
+                    <div class="details-card-title">
+                        <span class="details-card-icon">🔧</span>
+                        <span>MCP Tools</span>
+                    </div>
+                    <ul class="details-list">
+                        <li>
+                            <span class="details-list-icon">🐙</span>
+                            <span class="details-list-text"><strong>GitHub MCP:</strong> list_commits, list_issues, list_pull_requests, repository data</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🎭</span>
+                            <span class="details-list-text"><strong>Playwright MCP:</strong> browser_navigate, browser_take_screenshot, browser_snapshot</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🔍</span>
+                            <span class="details-list-text"><strong>Tool Discovery:</strong> Dynamic tool name resolution with fallback variations</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">⚡</span>
+                            <span class="details-list-text"><strong>Parallel Execution:</strong> Async/await for concurrent tool calls</span>
+                        </li>
+                        <li>
+                            <span class="details-list-icon">🛡️</span>
+                            <span class="details-list-text"><strong>Error Handling:</strong> Graceful fallbacks and authentication error detection</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="benefits-section">
+            <div class="benefits-header">
+                <div class="benefits-title">
+                    <span class="benefits-title-icon">🎯</span>
+                    <span>Key Features & Benefits</span>
+                </div>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">Real-Time Streaming</div>
+                    <div class="benefit-description">Server-Sent Events enable live updates as AI processes requests and executes tools</div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon green">🔌</div>
+                    <div class="benefit-title">MCP Integration</div>
+                    <div class="benefit-description">Seamless connection to GitHub and Playwright MCP servers via stdio protocol</div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon purple">🤖</div>
+                    <div class="benefit-title">AI Orchestration</div>
+                    <div class="benefit-description">Intelligent tool selection and execution using OpenAI function calling</div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">Async Processing</div>
+                    <div class="benefit-description">Non-blocking async/await for concurrent tool execution and streaming</div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon green">✂️</div>
+                    <div class="benefit-title">Context Management</div>
+                    <div class="benefit-description">Smart message truncation and token limit handling to prevent context overflow</div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon purple">🛡️</div>
+                    <div class="benefit-title">Error Handling</div>
+                    <div class="benefit-description">Robust error handling with fallbacks, authentication checks, and graceful degradation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

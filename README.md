@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Repository Analyzer & Visualizer
 
-## Getting Started
+A Next.js demo application that showcases MCP (Model Context Protocol) capabilities by analyzing GitHub repositories. The app uses GPT-4o-mini to intelligently orchestrate 2 MCP servers (GitHub MCP, Playwright MCP) to fetch repository data and capture screenshots.
 
-First, run the development server:
+## Features
+
+- **Intelligent Tool Orchestration**: GPT-4o-mini analyzes user requests and automatically selects and executes the appropriate MCP tools
+- **GitHub Data Analysis**: Fetches comprehensive repository data including commits, issues, PRs, contributors, and languages
+- **Visual Screenshots**: Captures repository page screenshots using Playwright
+- **Real-time Feedback**: Shows tool execution status and results in real-time
+- **Interactive UI**: Chat interface with visual dashboard for repository analysis
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- Python 3.8+ (for backend)
+- Docker (optional, for Playwright MCP server)
+- OpenAI API key
+- GitHub Personal Access Token 
+
+## Installation
+
+1. **Install Next.js frontend dependencies:**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd frontend
+npm install
+cd ..
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Note:** If you have an existing `node_modules` folder at the root, you may need to remove it and reinstall dependencies in the `frontend/` directory.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Install Python backend dependencies:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+pip install -r requirements.txt
+cd ..
+```
 
-## Learn More
+2. **Set up environment variables:**
 
-To learn more about Next.js, take a look at the following resources:
+Copy `.env.local.example` to `.env.local` and fill in your credentials:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cp .env.local.example .env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Edit `.env.local` with your:
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `GITHUB_TOKEN`: Your GitHub Personal Access Token (optional but recommended)
 
-## Deploy on Vercel
+3. **Set up MCP Servers:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### GitHub MCP Server
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The GitHub MCP server is typically available as an npm package. Install it globally or use npx:
+
+```bash
+npm install -g @modelcontextprotocol/server-github
+```
+
+Or configure it to run via npx (default in `.env.local.example`).
+
+### Playwright MCP Server
+
+**Option 1: Using Docker (Recommended)**
+
+```bash
+docker pull mcr.microsoft.com/playwright/mcp
+```
+
+Then configure in `.env.local`:
+```
+PLAYWRIGHT_MCP_COMMAND=docker
+PLAYWRIGHT_MCP_ARGS=run,-i,--rm,mcr.microsoft.com/playwright/mcp
+```
+
+**Option 2: Local Installation**
+
+```bash
+npm install -g @playwright/mcp
+```
+
+
+## Running the Application
+
+1. **Start the Python backend:**
+
+```bash
+cd backend
+python main.py
+# Or: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The backend will start on `http://localhost:8000`
+
+2. **Start the Next.js frontend (in a new terminal):**
+
+```bash
+cd frontend && npm run dev
+```
+
+3. **Open your browser:**
+
+Navigate to [http://localhost:3000](http://localhost:3000)
+
+4. **Try it out:**
+
+- "Analyze the vercel/next.js repository"
+- "Show me charts for the facebook/react repository"
+- "Take a screenshot of github.com/microsoft/playwright and analyze it"
+
+## How It Works
+
+1. **User Input**: User provides a GitHub repository URL or name in the chat interface
+2. **AI Analysis**: GPT-4o-mini analyzes the request and determines which MCP tools to use
+3. **Tool Execution**: The system orchestrates multiple MCP tools:
+   - **GitHub MCP**: Fetches repository data (stats, commits, issues, PRs, contributors, languages)
+   - **Playwright MCP**: Takes screenshots of the repository page
+4. **Data Processing**: GitHub API responses are converted to CSV format for chart generation
+5. **Visualization**: Charts and screenshots are displayed in the chat interface and dashboard
+
+## Example Use Cases
+
+### Basic Repository Analysis
+
+```
+User: "Analyze the vercel/next.js repository"
+```
+
+The system will:
+1. Fetch repository data using GitHub MCP
+2. Take a screenshot using Playwright MCP
+3. Generate multiple tables (commit activity, pull requests, etc.) 
+4. Display all results in the dashboard
+
+
+## Troubleshooting
+
+### MCP Servers Not Connecting
+
+- Ensure MCP servers are installed and accessible in your PATH
+- Check that the commands in `.env.local` are correct
+- Verify that required dependencies (Python, Docker, etc.) are installed
+
+### GitHub API Rate Limits
+
+- Add a GitHub Personal Access Token to `.env.local` for higher rate limits
+- The token needs `public_repo` scope for public repositories
+
+### Screenshots Not Working
+
+- Ensure Playwright MCP server is running
+- Check Docker container status if using Docker
+- Verify network connectivity
+
+## Development
+
+### Adding New MCP Tools
+
+1. Add tool definition to `frontend/app/lib/openai-client.ts`
+2. Implement tool execution in `frontend/app/lib/mcp-client.ts`
+3. Add tool to function definitions array
+4. Update UI components to display new tool results
+
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

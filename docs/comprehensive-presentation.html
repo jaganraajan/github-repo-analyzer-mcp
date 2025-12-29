@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repository Analyzer - Comprehensive Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #718096;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        h1 {
+            color: #2563eb;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2563eb;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        h4 {
+            color: #2563eb;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        .title-slide h1 {
+            font-size: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .tagline {
+            font-size: 28px;
+            color: #4a5568;
+            margin-bottom: 50px;
+        }
+
+        .title-slide .author {
+            font-size: 20px;
+            color: #718096;
+            margin-top: 40px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #93c5fd;
+        }
+
+        .feature-card h4 {
+            font-size: 20px;
+            color: #2563eb;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .concept-box {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .concept-box p {
+            color: #4a5568;
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #68d391;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .code-snippet .comment {
+            color: #a0aec0;
+        }
+
+        .code-snippet .keyword {
+            color: #f687b3;
+        }
+
+        .code-snippet .string {
+            color: #68d391;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .comparison-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .architecture-diagram {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .architecture-diagram h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .flow-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .flow-content {
+            flex: 1;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .key-points {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .key-points li {
+            padding: 15px 0;
+            font-size: 18px;
+            color: #4a5568;
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            line-height: 1.6;
+        }
+
+        .key-points li::before {
+            content: "→";
+            color: #667eea;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h4 {
+            color: #d97706;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            color: #4a5568;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: white;
+            border: 2px solid #3b82f6;
+            color: #2563eb;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-button:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            z-index: 1001;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .content-grid,
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide1">
+            <div class="slide-number">1 / 15</div>
+            <div class="title-slide">
+                <h1>GitHub Repository Analyzer</h1>
+                <div class="tagline">AI-Powered Analysis with MCP & Gen AI</div>
+                <div class="subtitle">A Deep Dive into Model Context Protocol, Generative AI, and Code Architecture</div>
+                <!-- <div class="author">20-25 Minute Technical Presentation</div> -->
+            </div>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide" id="slide2">
+            <div class="slide-number">2 / 15</div>
+            <h2>Presentation Agenda</h2>
+            <ul class="key-points">
+                <li><strong>Part 1: Understanding Generative AI</strong> - What is Gen AI, how it works, and why it matters</li>
+                <li><strong>Part 2: Model Context Protocol (MCP)</strong> - MCP fundamentals, architecture, and benefits</li>
+                <li><strong>Part 3: Project Overview</strong> - What I built and why</li>
+                <li><strong>Part 4: Code Walkthrough</strong> - Deep dive into the codebase architecture</li>
+                <li><strong>Part 5: Demo</strong> - Live demonstration</li>
+            </ul>
+        </div>
+
+        <!-- PART 1: GENERATIVE AI BASICS -->
+        <!-- Slide 3: What is Gen AI -->
+        <div class="slide" id="slide3">
+            <div class="slide-number">3 / 15</div>
+            <h2>Part 1: Understanding Generative AI</h2>
+            <h3>What is Generative AI?</h3>
+            
+            <div class="concept-box">
+                <!-- <h4>🤖 Definition</h4> -->
+                <p><strong>Generative AI</strong> refers to artificial intelligence systems that can create new content—text, images, code, music, and more—based on patterns learned from training data.</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon">📝</span>Text Generation</h4>
+                    <p>Models like GPT-4, Claude, and Gemini can generate human-like text, code, and conversations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🎨</span>Content Creation</h4>
+                    <p>DALL-E, Midjourney create images; GitHub Copilot generates code; ChatGPT writes essays</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: How Gen AI Works -->
+        <!-- <div class="slide" id="slide4">
+            <div class="slide-number">4 / 25</div>
+            <h2>How Generative AI Works</h2>
+            
+            <div class="architecture-diagram">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div class="flow-content">
+                        <h4>Training Phase</h4>
+                        <p>Model learns patterns from massive datasets (text, code, images) using neural networks</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div class="flow-content">
+                        <h4>Prompt Input</h4>
+                        <p>User provides a prompt or instruction (e.g., "Analyze this repository")</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div class="flow-content">
+                        <h4>Context Processing</h4>
+                        <p>Model processes the prompt using learned patterns and context window</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div class="flow-content">
+                        <h4>Generation</h4>
+                        <p>Model predicts and generates the most likely next tokens/words</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Slide 5: Gen AI Capabilities -->
+        <div class="slide" id="slide5">
+            <div class="slide-number">4 / 15</div>
+            <h2>Key Capabilities of Gen AI</h2>
+            
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon">💬</span>Natural Language Understanding</h4>
+                    <p>Understands context, intent, and nuance in human language</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔧</span>Function Calling</h4>
+                    <p>Can decide when to call external tools/APIs based on user requests</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔄</span>Multi-Turn Conversations</h4>
+                    <p>Maintains context across multiple interactions</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🎯</span>Task Orchestration</h4>
+                    <p>Can break down complex tasks and execute them step by step</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>💡 In Our Project</h4>
+                <p>We use GPT-4o-mini to understand user queries like "Analyze vercel/next.js" and intelligently decide which MCP tools to call (GitHub API, Playwright, etc.) without explicit programming.</p>
+            </div>
+        </div>
+
+        <!-- PART 2: MODEL CONTEXT PROTOCOL -->
+        <!-- Slide 6: What is MCP -->
+        <div class="slide" id="slide6">
+            <div class="slide-number">5 / 15</div>
+            <h2>Part 2: Model Context Protocol (MCP)</h2>
+            <h3>What is MCP?</h3>
+            
+            <div class="concept-box">
+                <h4>🔌 Definition</h4>
+                <p><strong>Model Context Protocol (MCP)</strong> is an open protocol that enables AI applications to securely connect to external data sources and tools. It standardizes how AI models interact with external resources.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h4>Problem MCP Solves:</h4>
+                    <ul class="key-points" style="font-size: 16px;">
+                        <li>AI models need access to real-time data</li>
+                        <li>Different tools have different APIs</li>
+                        <li>Security and authentication concerns</li>
+                        <li>Need for standardized integration</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>MCP Solution:</h4>
+                    <ul class="key-points" style="font-size: 16px;">
+                        <li>Standardized protocol for tool access</li>
+                        <li>Secure, authenticated connections</li>
+                        <li>Easy integration with any AI model</li>
+                        <li>Extensible and flexible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: MCP Architecture -->
+        <div class="slide" id="slide7">
+            <div class="slide-number">6 / 15</div>
+            <h2>MCP Architecture</h2>
+            
+            <div class="architecture-diagram">
+                <h4>MCP Components</h4>
+                
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div class="flow-content">
+                        <h4>MCP Client</h4>
+                        <p>My application (FastAPI backend) that wants to use MCP tools</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div class="flow-content">
+                        <h4>MCP Server</h4>
+                        <p>External service (GitHub MCP, Playwright MCP) that provides tools and resources</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div class="flow-content">
+                        <h4>Transport Layer</h4>
+                        <p>Communication method (stdio, HTTP, SSE) - I use stdio (standard input/output)</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div class="flow-content">
+                        <h4>Tools & Resources</h4>
+                        <p>Functions and data that MCP servers expose (e.g., list_commits, take_screenshot)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: MCP Communication Flow -->
+        <div class="slide" id="slide8">
+            <div class="slide-number">7 / 15</div>
+            <h2>MCP Communication Flow</h2>
+            
+            <div class="code-snippet">
+<div class="code-line"><span class="comment">// 1. Client discovers available tools</span></div>
+<div class="code-line"><span class="keyword">await</span> mcpClient.<span class="keyword">list_tools</span>()</div>
+
+<div class="code-line"><span class="comment">// 2. Client calls a tool with parameters</span></div>
+<div class="code-line"><span class="keyword">await</span> mcpClient.<span class="keyword">call_tool</span>(</div>
+<div class="code-line" style="padding-left:2em;"><span class="string">"list_commits"</span>,</div>
+<div class="code-line" style="padding-left:2em;">{ <span class="string">"owner"</span>: <span class="string">"vercel"</span>, <span class="string">"repo"</span>: <span class="string">"next.js"</span> }</div>
+<div class="code-line">)</div>
+
+<div class="code-line"><span class="comment">// 3. Server executes and returns result</span></div>
+<div class="code-line"><span class="comment">// Returns: JSON with commit data</span></div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🔑 Key Points</h4>
+                <p><strong>Stdio Transport:</strong> MCP servers run as separate processes, communicating via standard input/output streams. This allows secure, isolated execution.</p>
+                <p><strong>JSON-RPC Protocol:</strong> All communication uses JSON-RPC 2.0 format for structured requests and responses.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: MCP Servers in Our Project -->
+        <div class="slide" id="slide9">
+            <div class="slide-number">8 / 15</div>
+            <h2>MCP Servers in Our Project</h2>
+            
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon"></span>GitHub MCP</h4>
+                    <p><strong>Purpose:</strong> Fetch GitHub repository data</p>
+                    <p><strong>Tools:</strong> list_commits, list_issues, list_pull_requests, get_repository</p>
+                    <p><strong>Example:</strong> Get commit history for vercel/next.js</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon"></span>Playwright MCP</h4>
+                    <p><strong>Purpose:</strong> Browser automation and screenshots</p>
+                    <p><strong>Tools:</strong> browser_navigate, browser_take_screenshot</p>
+                    <p><strong>Example:</strong> Capture screenshot of GitHub repository page</p>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h4>🔧 How They Work Together</h4>
+                <p>When a user asks "Analyze vercel/next.js", GPT-4o-mini decides to call both servers: GitHub MCP for data and Playwright MCP for visual capture. Our backend orchestrates these calls in parallel for efficiency.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: MCP Benefits -->
+        <div class="slide" id="slide10">
+            <div class="slide-number">9 / 15</div>
+            <h2>Why Use MCP?</h2>
+            
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔒</span>Security</h4>
+                    <p>Isolated execution, controlled access, no direct API keys in AI model</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔄</span>Standardization</h4>
+                    <p>One protocol for all tools, easier integration and maintenance</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">⚡</span>Flexibility</h4>
+                    <p>Easy to add new tools without changing core application code</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🤖</span>AI-Friendly</h4>
+                    <p>Tools are discoverable, self-documenting, and easy for AI to understand</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 3: PROJECT OVERVIEW -->
+        <!-- Slide 11: Project Overview -->
+        <div class="slide" id="slide11">
+            <div class="slide-number">10 / 15</div>
+            <h2>Part 3: Project Overview</h2>
+            <h3>GitHub Repository Analyzer</h3>
+            
+            <div class="concept-box">
+                <h4>🎯 Project Goal</h4>
+                <p>Build an AI-powered application that can intelligently analyze GitHub repositories by combining:</p>
+                <ul class="key-points" style="font-size: 16px; margin-top: 15px;">
+                    <li>Generative AI (GPT-4o-mini) for understanding user intent</li>
+                    <li>MCP Protocol for accessing external tools</li>
+                    <li>Modern web stack (Next.js + FastAPI) for the interface</li>
+                </ul>
+            </div>
+
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon">💬</span>User Input</h4>
+                    <p>"Analyze vercel/next.js repository"</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">📊</span>Output</h4>
+                    <p>Repository data, screenshots, charts, and AI analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: System Architecture -->
+        <div class="slide" id="slide12">
+            <div class="slide-number">11 / 15</div>
+            <h2>System Architecture</h2>
+            
+            <div class="architecture-diagram">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div class="flow-content">
+                        <h4>Frontend (Next.js)</h4>
+                        <p>React components, chat interface, SSE streaming client</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div class="flow-content">
+                        <h4>Backend (FastAPI)</h4>
+                        <p>REST API, OpenAI integration, MCP client manager</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div class="flow-content">
+                        <h4>OpenAI API</h4>
+                        <p>GPT-4o-mini for understanding and tool orchestration</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div class="flow-content">
+                        <h4>MCP Servers</h4>
+                        <p>GitHub MCP, Playwright MCP (separate processes via stdio)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 4: CODE WALKTHROUGH -->
+        <!-- Slide 13: Code Structure -->
+        <div class="slide" id="slide13">
+            <div class="slide-number">12 / 15</div>
+            <h2>Part 4: Code Walkthrough</h2>
+            <h3>Project Structure</h3>
+            
+            <div class="folder-tree">
+                <ul>
+                    <li>
+                        <span class="folder">github-repo-analyzer-mcp/</span>
+                        <ul>
+                            <li>
+                                <span class="folder">backend/</span>
+                                <ul>
+                                    <li>
+                                        <span class="file">main.py</span>
+                                        <span class="comment">— FastAPI app & routes</span>
+                                    </li>
+                                    <li>
+                                        <span class="file">mcp_client.py</span>
+                                        <span class="comment">— MCP server management</span>
+                                    </li>
+                                    <li>
+                                        <span class="file">openai_client.py</span>
+                                        <span class="comment">— OpenAI integration</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="folder">frontend/</span>
+                                <ul>
+                                    <li>
+                                        <span class="folder">app/</span>
+                                        <ul>
+                                            <li>
+                                                <span class="folder">components/</span>
+                                                <ul>
+                                                    <li><span class="file">ChatInterface.tsx</span></li>
+                                                    <li><span class="file">MessageList.tsx</span></li>
+                                                    <li><span class="file">ScreenshotGallery.tsx</span></li>
+                                                </ul>
+                                            </li>
+                                            <li><span class="file">page.tsx</span></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="folder">docs/</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <style>
+            .folder-tree ul {
+                list-style: none;
+                padding-left: 18px;
+            }
+            .folder-tree .folder {
+                font-weight: bold;
+                color: #2d4a78;
+            }
+            .folder-tree .file {
+                color: #494949;
+                font-family: monospace;
+            }
+            .folder-tree .comment {
+                color: #888;
+                font-style: italic;
+                margin-left: 10px;
+                font-size: 90%;
+                font-family: inherit;
+            }
+            .folder-tree li {
+                margin: 2px 0 2px 0;
+                line-height: 1.7;
+                position: relative;
+            }
+            .folder-tree ul ul {
+                border-left: 1px solid #d0d2db;
+                margin-left: 12px;
+            }
+            </style>
+
+            <!-- <div class="highlight-box">
+                <h4>📁 Key Files to Show</h4>
+                <p>We'll walk through: <strong>main.py</strong> (API), <strong>mcp_client.py</strong> (MCP integration), <strong>openai_client.py</strong> (AI orchestration), and <strong>ChatInterface.tsx</strong> (frontend)</p>
+            </div> -->
+        </div>
+
+        <!-- Slide 14: Backend - main.py -->
+        <!-- <div class="slide" id="slide14">
+            <div class="slide-number">14 / 25</div>
+            <h2>Backend: main.py</h2>
+            <h3>FastAPI Application Entry Point</h3>
+            
+            <div class="code-snippet">
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+<span class="keyword">from</span> mcp_client <span class="keyword">import</span> MCPClientManager
+
+app = FastAPI()
+mcp_manager = MCPClientManager()
+
+<span class="comment"># Initialize MCP servers on startup</span>
+<span class="keyword">@app.on_event</span>(<span class="string">"startup"</span>)
+<span class="keyword">async def</span> startup_event():
+    <span class="keyword">await</span> mcp_manager.initialize_all()
+
+<span class="comment"># Chat endpoint with SSE streaming</span>
+<span class="keyword">@app.post</span>(<span class="string">"/api/chat"</span>)
+<span class="keyword">async def</span> chat_endpoint(request: ChatRequest):
+    <span class="keyword">async def</span> generate_response():
+        <span class="keyword">async for</span> event <span class="keyword">in</span> chat_with_tools(
+            messages, mcp_manager
+        ):
+            <span class="keyword">yield</span> f<span class="string">"data: {json.dumps(event)}\n\n"</span>
+    
+    <span class="keyword">return</span> StreamingResponse(
+        generate_response(),
+        media_type=<span class="string">"text/event-stream"</span>
+    )
+            </div>
+
+            <div class="concept-box">
+                <h4>🔑 Key Points</h4>
+                <p><strong>MCP Manager:</strong> Initialized once on startup, manages connections to all MCP servers</p>
+                <p><strong>SSE Streaming:</strong> Uses Server-Sent Events to stream responses in real-time to frontend</p>
+                <p><strong>Async/Await:</strong> Non-blocking operations for handling multiple requests</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 15: Backend - mcp_client.py -->
+        <!-- <div class="slide" id="slide15">
+            <div class="slide-number">15 / 25</div>
+            <h2>Backend: mcp_client.py</h2>
+            <h3>MCP Server Connection Management</h3>
+            
+            <div class="code-snippet">
+<span class="keyword">class</span> MCPClientManager:
+    <span class="keyword">def __init__</span>(self):
+        self.github_session = None
+        self.playwright_session = None
+    
+    <span class="keyword">async def</span> initialize_all(self):
+        <span class="comment"># Start MCP servers as subprocesses</span>
+        <span class="keyword">await</span> self._initialize_github()
+        <span class="keyword">await</span> self._initialize_playwright()
+    
+    <span class="keyword">async def</span> _initialize_github(self):
+        <span class="comment"># Create stdio connection to GitHub MCP</span>
+        server_params = StdioServerParameters(
+            command=<span class="string">"npx"</span>,
+            args=[<span class="string">"@modelcontextprotocol/server-github"</span>]
+        )
+        stdio_ctx = stdio_client(server_params)
+        read_stream, write_stream = <span class="keyword">await</span> stdio_ctx.__aenter__()
+        self.github_session = ClientSession(read_stream, write_stream)
+            </div>
+
+            <div class="concept-box">
+                <h4>🔑 Key Points</h4>
+                <p><strong>Stdio Transport:</strong> MCP servers run as separate processes, communicating via stdin/stdout</p>
+                <p><strong>Session Management:</strong> Each MCP server has its own session that persists for the app lifetime</p>
+                <p><strong>Async Context Managers:</strong> Properly handles connection lifecycle (startup/shutdown)</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 16: Backend - Tool Execution -->
+        <!-- <div class="slide" id="slide16">
+            <div class="slide-number">16 / 25</div>
+            <h2>Backend: Tool Execution</h2>
+            <h3>Calling MCP Tools</h3>
+            
+            <div class="code-snippet">
+<span class="keyword">async def</span> fetch_github_repo_data(self, owner: str, repo: str):
+    <span class="comment"># Discover available tools dynamically</span>
+    tool_names = <span class="keyword">await</span> self._discover_github_tools()
+    
+    <span class="comment"># Call multiple tools in parallel</span>
+    results = <span class="keyword">await</span> asyncio.gather(
+        self._call_github_tool(<span class="string">"list_commits"</span>, 
+            {<span class="string">"owner"</span>: owner, <span class="string">"repo"</span>: repo}),
+        self._call_github_tool(<span class="string">"list_issues"</span>, 
+            {<span class="string">"owner"</span>: owner, <span class="string">"repo"</span>: repo}),
+        self._call_github_tool(<span class="string">"list_pull_requests"</span>, 
+            {<span class="string">"owner"</span>: owner, <span class="string">"repo"</span>: repo})
+    )
+    
+    <span class="keyword">return</span> {
+        <span class="string">"commits"</span>: results[0],
+        <span class="string">"issues"</span>: results[1],
+        <span class="string">"pullRequests"</span>: results[2]
+    }
+            </div>
+
+            <div class="highlight-box">
+                <h4>💡 Important Patterns</h4>
+                <p><strong>Dynamic Tool Discovery:</strong> We discover tool names at runtime (different MCP servers may use different names)</p>
+                <p><strong>Parallel Execution:</strong> Use asyncio.gather() to call multiple tools simultaneously for better performance</p>
+                <p><strong>Error Handling:</strong> Each tool call has try/except to handle failures gracefully</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 17: Backend - openai_client.py -->
+        <!-- <div class="slide" id="slide17">
+            <div class="slide-number">17 / 25</div>
+            <h2>Backend: openai_client.py</h2>
+            <h3>AI Orchestration with Function Calling</h3>
+            
+            <div class="code-snippet">
+<span class="comment"># Define tools for OpenAI</span>
+FUNCTION_DEFINITIONS = [
+    {
+        <span class="string">"name"</span>: <span class="string">"fetch_github_repo_data"</span>,
+        <span class="string">"description"</span>: <span class="string">"Fetches GitHub repository data"</span>,
+        <span class="string">"parameters"</span>: {
+            <span class="string">"type"</span>: <span class="string">"object"</span>,
+            <span class="string">"properties"</span>: {
+                <span class="string">"owner"</span>: {<span class="string">"type"</span>: <span class="string">"string"</span>},
+                <span class="string">"repo"</span>: {<span class="string">"type"</span>: <span class="string">"string"</span>}
+            }
+        }
+    }
+]
+
+<span class="keyword">async def</span> chat_with_tools(messages, mcp_manager):
+    <span class="comment"># OpenAI decides which tools to call</span>
+    stream = <span class="keyword">await</span> openai_client.chat.completions.create(
+        model=<span class="string">"gpt-4o-mini"</span>,
+        messages=messages,
+        tools=FUNCTION_DEFINITIONS,
+        tool_choice=<span class="string">"auto"</span>  <span class="comment"># AI decides</span>
+    )
+            </div>
+
+            <div class="concept-box">
+                <h4>🔑 Key Points</h4>
+                <p><strong>Function Calling:</strong> We define tools as functions, and GPT-4o-mini decides when to call them based on user intent</p>
+                <p><strong>Tool Choice Auto:</strong> The AI model intelligently selects which tools to use (or none if not needed)</p>
+                <p><strong>Streaming:</strong> Responses stream in real-time, allowing for live updates in the UI</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 18: Backend - Tool Execution Flow -->
+        <!-- <div class="slide" id="slide18">
+            <div class="slide-number">18 / 25</div>
+            <h2>Backend: Tool Execution Flow</h2>
+            
+            <div class="architecture-diagram">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div class="flow-content">
+                        <h4>AI Decides to Call Tool</h4>
+                        <p>GPT-4o-mini returns tool_calls in response (e.g., fetch_github_repo_data)</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div class="flow-content">
+                        <h4>Execute Tool</h4>
+                        <p>Backend calls execute_tool_call() which routes to MCP manager</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div class="flow-content">
+                        <h4>MCP Tool Call</h4>
+                        <p>MCP manager calls the appropriate MCP server tool (e.g., list_commits)</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div class="flow-content">
+                        <h4>Return to AI</h4>
+                        <p>Tool result is sent back to OpenAI as tool message, AI generates final response</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Slide 19: Frontend - ChatInterface -->
+        <!-- <div class="slide" id="slide19">
+            <div class="slide-number">19 / 25</div>
+            <h2>Frontend: ChatInterface.tsx</h2>
+            <h3>Main Chat Component</h3>
+            
+            <div class="code-snippet">
+<span class="keyword">export default function</span> ChatInterface() {
+    <span class="keyword">const</span> [messages, setMessages] = useState&lt;Message[]&gt;([]);
+    
+    <span class="keyword">const</span> handleSubmit = <span class="keyword">async</span> (e: React.FormEvent) => {
+        <span class="comment">// Send to FastAPI backend</span>
+        <span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
+            <span class="string">`${backendUrl}/api/chat`</span>,
+            { method: <span class="string">"POST"</span>, body: JSON.stringify({ messages }) }
+        );
+        
+        <span class="comment">// Read SSE stream</span>
+        <span class="keyword">const</span> reader = response.body?.getReader();
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            <span class="keyword">const</span> { done, value } = <span class="keyword">await</span> reader.read();
+            <span class="keyword">if</span> (done) <span class="keyword">break</span>;
+            
+            <span class="comment">// Parse SSE events</span>
+            <span class="keyword">const</span> data = JSON.parse(line);
+            <span class="keyword">if</span> (data.type === <span class="string">"content"</span>) {
+                <span class="comment">// Update message with streaming text</span>
+                setMessages(prev => updateMessage(prev, data.content));
+            }
+        }
+    };
+}
+            </div>
+
+            <div class="concept-box">
+                <h4>🔑 Key Points</h4>
+                <p><strong>SSE Client:</strong> Frontend reads Server-Sent Events stream from backend</p>
+                <p><strong>Real-Time Updates:</strong> Messages update as content streams in, not just at the end</p>
+                <p><strong>State Management:</strong> React useState manages message history and UI state</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 20: Frontend - MessageList -->
+        <!-- <div class="slide" id="slide20">
+            <div class="slide-number">20 / 25</div>
+            <h2>Frontend: MessageList.tsx</h2>
+            <h3>Rendering Messages & Tool Results</h3>
+            
+            <div class="code-snippet">
+<span class="keyword">export default function</span> MessageList({ messages }: MessageListProps) {
+    <span class="keyword">return</span> (
+        &lt;div&gt;
+            {messages.map(message => (
+                &lt;div key={message.id}&gt;
+                    <span class="comment">// Render markdown content</span>
+                    &lt;ReactMarkdown&gt;{message.content}&lt;/ReactMarkdown&gt;
+                    
+                    <span class="comment">// Show tool results</span>
+                    {message.toolResults?.map(result => (
+                        <span class="keyword">if</span> (result.commits) {
+                            <span class="comment">// Render commits table</span>
+                            &lt;CommitsTable data={result.commits} /&gt;
+                        }
+                        <span class="keyword">if</span> (result.screenshot) {
+                            <span class="comment">// Render screenshot</span>
+                            &lt;ScreenshotGallery screenshots={[result.screenshot]} /&gt;
+                        }
+                    ))}
+                &lt;/div&gt;
+            ))}
+        &lt;/div&gt;
+    );
+}
+            </div>
+
+            <div class="highlight-box">
+                <h4>💡 Rendering Strategy</h4>
+                <p><strong>Markdown:</strong> AI responses are rendered as markdown for rich formatting</p>
+                <p><strong>Tool Results:</strong> Different result types (commits, screenshots) are rendered with specialized components</p>
+                <p><strong>Conditional Rendering:</strong> Only show relevant UI components based on available data</p>
+            </div>
+        </div> -->
+
+        <!-- Slide 21: Data Flow Summary -->
+        <div class="slide" id="slide21">
+            <div class="slide-number">13 / 15</div>
+            <h2>Complete Data Flow</h2>
+            
+            <div class="architecture-diagram">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div class="flow-content">
+                        <h4>User Types Message</h4>
+                        <p>ChatInterface.tsx sends POST to /api/chat</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div class="flow-content">
+                        <h4>Backend Receives Request</h4>
+                        <p>main.py chat_endpoint() calls openai_client.chat_with_tools()</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div class="flow-content">
+                        <h4>AI Analyzes & Calls Tools</h4>
+                        <p>GPT-4o-mini decides to call fetch_github_repo_data()</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div class="flow-content">
+                        <h4>MCP Tools Execute</h4>
+                        <p>mcp_client.py calls GitHub MCP server's list_commits tool</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">5</div>
+                    <div class="flow-content">
+                        <h4>Results Stream Back</h4>
+                        <p>SSE events stream to frontend: content, tool_results, done</p>
+                    </div>
+                </div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">6</div>
+                    <div class="flow-content">
+                        <h4>UI Updates</h4>
+                        <p>MessageList.tsx renders markdown, tables, and screenshots</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Key Code Patterns -->
+        <div class="slide" id="slide22">
+            <div class="slide-number">14 / 15</div>
+            <h2>Key Code Patterns to Understand</h2>
+            
+            <div class="content-grid">
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔄</span>Async/Await</h4>
+                    <p>All MCP calls and OpenAI requests use async/await for non-blocking operations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">📡</span>SSE Streaming</h4>
+                    <p>Backend yields events, frontend reads stream for real-time updates</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔧</span>Function Calling</h4>
+                    <p>OpenAI function calling lets AI decide which tools to use dynamically</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4><span class="feature-icon">🔌</span>MCP Protocol</h4>
+                    <p>Stdio transport, JSON-RPC messages, tool discovery and execution</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: What to Show in Code -->
+        <!-- <div class="slide" id="slide23">
+            <div class="slide-number">23 / 25</div>
+            <h2>What to Show in Code</h2>
+            
+            <div class="concept-box">
+                <h4>📂 File: backend/main.py</h4>
+                <ul class="key-points" style="font-size: 16px;">
+                    <li>Show FastAPI app initialization</li>
+                    <li>MCP manager startup event</li>
+                    <li>Chat endpoint with SSE streaming</li>
+                    <li>How events are yielded to frontend</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h4>📂 File: backend/mcp_client.py</h4>
+                <ul class="key-points" style="font-size: 16px;">
+                    <li>MCPClientManager class structure</li>
+                    <li>Stdio server initialization</li>
+                    <li>Tool discovery method</li>
+                    <li>Parallel tool execution with asyncio.gather()</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h4>📂 File: backend/openai_client.py</h4>
+                <ul class="key-points" style="font-size: 16px;">
+                    <li>FUNCTION_DEFINITIONS array</li>
+                    <li>chat_with_tools() function</li>
+                    <li>Tool execution routing</li>
+                    <li>Context truncation logic</li>
+                </ul>
+            </div>
+        </div> -->
+
+        <!-- Slide 24: Demo Preparation -->
+        <div class="slide" id="slide24">
+            <div class="slide-number">15 / 16</div>
+            <h2>Demo</h2>
+            
+            <div class="highlight-box">
+                <!-- <h4>🎬 What to Demonstrate</h4> -->
+                <p><strong>1. Basic Query:</strong> "Analyze vercel/next.js repository"</p>
+                <p>→ Show how AI decides to call GitHub MCP tools</p>
+                <p>→ Show streaming response in UI</p>
+                <p>→ Show data tables with commits/issues/PRs</p>
+            </div>
+
+            <div class="highlight-box">
+                <!-- <h4>🎬 Advanced Query:</h4> -->
+                <p><strong>2. Screenshot Request:</strong> "Take a screenshot of github.com/microsoft/playwright"</p>
+                <p>→ Show how AI calls Playwright MCP</p>
+                <p>→ Show screenshot appearing in gallery</p>
+                <p>→ Show tool execution indicators</p>
+            </div>
+
+            <div class="concept-box">
+                <h4>💡 Key Points to Highlight</h4>
+                <ul class="key-points" style="font-size: 16px;">
+                    <li>AI intelligently selects tools (no hardcoded logic)</li>
+                    <li>Real-time streaming updates</li>
+                    <li>Multiple MCP servers working together</li>
+                    <li>Clean separation of concerns (frontend/backend/MCP)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 25: Thank You -->
+        <div class="slide" id="slide25">
+            <div class="slide-number">16 / 16</div>
+            <div class="title-slide">
+                <h2 style="font-size: 48px; margin-bottom: 40px;">Thank You!</h2>
+                
+                <!-- <div class="content-grid">
+                    <div class="feature-card">
+                        <h4><span class="feature-icon">🤖</span>Gen AI</h4>
+                        <p>GPT-4o-mini understands intent and orchestrates tools intelligently</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><span class="feature-icon">🔌</span>MCP</h4>
+                        <p>Standardized protocol for AI to access external tools and data</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><span class="feature-icon">⚡</span>Architecture</h4>
+                        <p>Modern stack: Next.js frontend, FastAPI backend, MCP servers</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><span class="feature-icon">🎯</span>Result</h4>
+                        <p>Intelligent, extensible system for GitHub repository analysis</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 50px; font-size: 24px; color: #2563eb; font-weight: 700;">
+                    Questions?
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 16;
+        
+        // Map logical slide numbers to actual slide IDs (skipping commented-out slides)
+        const slideMap = [0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 21, 22, 24, 25];
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            // Get the actual slide ID from the mapping
+            const actualSlideId = slideMap[currentSlide];
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide${actualSlideId}`).classList.add('active');
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Home') {
+                currentSlide = 1;
+                showSlide(currentSlide);
+            }
+            if (e.key === 'End') {
+                currentSlide = totalSlides;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>
+
