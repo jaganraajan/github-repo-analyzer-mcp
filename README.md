@@ -1,6 +1,6 @@
 # GitHub Repository Analyzer & Visualizer
 
-A Next.js demo application that showcases MCP (Model Context Protocol) capabilities by analyzing GitHub repositories. The app uses GPT-4o-mini to intelligently orchestrate 2 MCP servers (GitHub MCP, Playwright MCP) to fetch repository data and capture screenshots.
+A Next.js application that showcases MCP (Model Context Protocol) capabilities by analyzing GitHub repositories. The app uses GPT-4o-mini to intelligently orchestrate 2 MCP servers (GitHub MCP, Playwright MCP) to fetch repository data and capture screenshots.
 
 ## Features
 
